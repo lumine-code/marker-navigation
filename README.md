@@ -1,14 +1,34 @@
 # scrollmap-navigation
 
-Show navigation headers on the scrollbar.
+Show navigation headers on the scrollbar. A layer package for [scrollmap](https://github.com/lumine-code/scrollmap) that renders the document outline gathered by [navigation-panel](https://github.com/lumine-code/navigation-panel).
+
+## Features
+
+- **Header markers**: shows navigation-panel section headers as scrollbar markers.
+- **Level colors**: markers are colored by header level via theme site colors.
+- **Depth limit**: optionally hide headers deeper than a configured level.
+- **Threshold**: optionally hide all markers when the header count gets too large.
 
 ## Installation
 
-To install `scrollmap-navigation` search for [scrollmap-navigation](https://web.pulsar-edit.dev/packages/scrollmap-navigation) in the Install pane of the Pulsar settings or run `ppm install scrollmap-navigation`. Alternatively, you can run `ppm install asiloisad/pulsar-scrollmap-navigation` to install a package directly from the GitHub repository.
+To install `scrollmap-navigation` search for _scrollmap-navigation_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/scrollmap-navigation`.
 
-Layer package for [scrollmap](https://github.com/asiloisad/pulsar-scrollmap).
+## Customization
 
-Requires [navigation-panel](https://github.com/asiloisad/pulsar-navigation-panel).
+The style can be adjusted in the `styles.less` file, e.g. recolor markers of a given header level:
+
+```less
+.scrollmap .marker.marker-navi {
+  &.navigation-marker-1 {
+    background: var(--text-color-info);
+  }
+}
+```
+
+## Services
+
+- **navigation-panel** (`0.0.1`): consumed to read the flattened header outline of the active editor and follow its updates.
+- **scrollmap** (`1.0.0`): provided to register the `navi` marker layer rendered on the editor scrollbar.
 
 ## Contributing
 
