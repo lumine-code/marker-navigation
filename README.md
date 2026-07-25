@@ -27,7 +27,7 @@ The style can be adjusted in the `styles.less` file, e.g. recolor markers of a g
 
 ## Services
 
-- **navigation-panel** (`0.0.1`): consumed to read the flattened header outline of the active editor and follow its updates.
+- **navigation-panel** (`^1.0.0`): consumed to read the flattened header outline of the active editor and follow its updates.
 - **scrollmap** (`1.0.0`): provided to register the `navi` marker layer rendered on the editor scrollbar.
 
 ## Contributing

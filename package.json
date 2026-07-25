@@ -27,7 +27,7 @@
   "consumedServices": {
     "navigation-panel": {
       "versions": {
-        "0.0.1": "consumeNaviService"
+        "^1.0.0": "consumeNaviService"
       }
     }
   },
