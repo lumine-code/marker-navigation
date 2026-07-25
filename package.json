@@ -1,7 +1,7 @@
 {
   "name": "scrollmap-navigation",
   "author": "lumine-code",
-  "description": "Show navigation headers on the scrollbar",
+  "description": "Show navigation headers on the scrollbar.",
   "repository": "https://github.com/lumine-code/scrollmap-navigation",
   "bugs": {
     "url": "https://github.com/lumine-code/scrollmap-navigation/issues"

@@ -1,6 +1,8 @@
 # scrollmap-navigation
 
-Show navigation headers on the scrollbar. A layer package for [scrollmap](https://github.com/lumine-code/scrollmap) that renders the document outline gathered by [navigation-panel](https://github.com/lumine-code/navigation-panel).
+Show navigation headers on the scrollbar.
+
+A layer package for [scrollmap](https://github.com/lumine-code/scrollmap) that renders the document outline gathered by [navigation-panel](https://github.com/lumine-code/navigation-panel).
 
 ## Features
 
