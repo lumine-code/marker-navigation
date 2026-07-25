@@ -39,12 +39,9 @@ describe("scrollmap-navigation", () => {
   describe("activation", () => {
     it("activates and observes its configuration", () => {
       expect(atom.packages.isPackageActive("scrollmap-navigation")).toBe(true);
-      expect(mainModule.threshold).toBe(0);
       expect(mainModule.maxDepth).toBe(0);
 
-      atom.config.set("scrollmap-navigation.threshold", 5);
       atom.config.set("scrollmap-navigation.maxDepth", 3);
-      expect(mainModule.threshold).toBe(5);
       expect(mainModule.maxDepth).toBe(3);
     });
   });
@@ -56,21 +53,18 @@ describe("scrollmap-navigation", () => {
       provider = mainModule.provideScrollmap();
     });
 
-    it("describes the navi layer", () => {
-      expect(provider.name).toBe("navi");
+    it("describes the navigation layer", () => {
+      expect(provider.name).toBe("navigation");
+      expect(provider.threshold).toBe("scrollmap-navigation.threshold");
       expect(typeof provider.initialize).toBe("function");
       expect(typeof provider.getItems).toBe("function");
     });
 
-    it("re-runs the layer when the configuration changes", () => {
+    it("re-runs the layer when the max depth changes", () => {
       const layer = createLayer(editor);
       provider.initialize(layer);
 
       atom.config.set("scrollmap-navigation.maxDepth", 4);
-      expect(layer.update).toHaveBeenCalled();
-
-      layer.update.calls.reset();
-      atom.config.set("scrollmap-navigation.threshold", 7);
       expect(layer.update).toHaveBeenCalled();
       layer.disposables.dispose();
     });
@@ -111,18 +105,6 @@ describe("scrollmap-navigation", () => {
       expect(items.map((item) => item.row)).toEqual([1, 2]);
     });
 
-    it("hides all markers when the threshold is exceeded", () => {
-      atom.config.set("scrollmap-navigation.threshold", 2);
-      const layer = createLayer(editor);
-      layer.cache.set("data", [
-        { revel: 1, startPoint: { row: 1, column: 0 } },
-        { revel: 1, startPoint: { row: 2, column: 0 } },
-        { revel: 1, startPoint: { row: 3, column: 0 } },
-      ]);
-
-      expect(provider.getItems(layer)).toEqual([]);
-    });
-
     it("returns no items without cached data", () => {
       const layer = createLayer(editor);
       expect(provider.getItems(layer)).toEqual([]);
@@ -148,7 +130,7 @@ describe("scrollmap-navigation", () => {
       expect(mainModule.getHeaders(editor)).toEqual([]);
     });
 
-    it("pushes fresh headers into the navi layer on header updates", () => {
+    it("pushes fresh headers into the navigation layer on header updates", () => {
       const headers = [{ revel: 2, startPoint: { row: 4, column: 0 } }];
       const service = createNaviService(editor, headers);
       const disposable = mainModule.consumeNaviService(service);

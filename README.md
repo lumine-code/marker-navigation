@@ -20,7 +20,7 @@ To install `scrollmap-navigation` search for _scrollmap-navigation_ in the Insta
 Markers follow the `--navigation-marker-*-color` properties defined by navigation-panel, so overriding those recolors the editor lines and the scrollbar together. The style can also be adjusted in the `styles.less` file, e.g. recolor scrollbar markers of a given header level:
 
 ```less
-.scrollmap .marker.marker-navi {
+.scrollmap .marker.marker-navigation {
   &.navigation-marker-1 {
     background: var(--text-color-info);
   }
@@ -30,7 +30,7 @@ Markers follow the `--navigation-marker-*-color` properties defined by navigatio
 ## Services
 
 - **navigation-panel** (`^1.0.0`): consumed to read the flattened header outline of the active editor and follow its updates.
-- **scrollmap** (`1.0.0`): provided to register the `navi` marker layer rendered on the editor scrollbar.
+- **scrollmap** (`1.1.0`): provided to register the `navigation` marker layer rendered on the editor scrollbar.
 
 ## Contributing
 
