@@ -2,26 +2,18 @@
   z-index: 14;
 
   &.navigation-marker {
-    background: var(--background-color-selected);
-  }
-
-  &.navigation-marker-5 {
-    background: var(--ui-site-color-5);
-  }
-
-  &.navigation-marker-4 {
-    background: var(--ui-site-color-4);
+    background: var(--navigation-marker-color);
   }
 
   &.navigation-marker-3 {
-    background: var(--ui-site-color-3);
+    background: var(--navigation-marker-3-color);
   }
 
   &.navigation-marker-2 {
-    background: var(--ui-site-color-2);
+    background: var(--navigation-marker-2-color);
   }
 
   &.navigation-marker-1 {
-    background: var(--ui-site-color-1);
+    background: var(--navigation-marker-1-color);
   }
 }

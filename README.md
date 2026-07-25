@@ -7,7 +7,7 @@ A layer package for [scrollmap](https://github.com/lumine-code/scrollmap) that r
 ## Features
 
 - **Header markers**: shows navigation-panel section headers as scrollbar markers.
-- **Level colors**: markers are colored by header level via theme site colors.
+- **Level colors**: markers are colored by header level via the navigation-panel marker palette.
 - **Depth limit**: optionally hide headers deeper than a configured level.
 - **Threshold**: optionally hide all markers when the header count gets too large.
 
@@ -17,7 +17,7 @@ To install `scrollmap-navigation` search for _scrollmap-navigation_ in the Insta
 
 ## Customization
 
-The style can be adjusted in the `styles.less` file, e.g. recolor markers of a given header level:
+Markers follow the `--navigation-marker-*-color` properties defined by navigation-panel, so overriding those recolors the editor lines and the scrollbar together. The style can also be adjusted in the `styles.less` file, e.g. recolor scrollbar markers of a given header level:
 
 ```less
 .scrollmap .marker.marker-navi {
