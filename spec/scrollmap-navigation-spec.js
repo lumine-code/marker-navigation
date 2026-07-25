@@ -25,12 +25,15 @@ describe("scrollmap-navigation", () => {
   }
 
   function createLayer(layerEditor) {
-    return {
+    const layer = {
       editor: layerEditor,
       cache: new Map(),
       disposables: new CompositeDisposable(),
       update: jasmine.createSpy("update"),
     };
+    // Register through the provider contract, exactly like the scrollmap hub.
+    mainModule.provideScrollmap().initialize(layer);
+    return layer;
   }
 
   describe("activation", () => {
@@ -151,14 +154,13 @@ describe("scrollmap-navigation", () => {
       const disposable = mainModule.consumeNaviService(service);
 
       const layer = createLayer(editor);
-      editor.scrollmap = { layers: new Map([["navi", layer]]) };
 
       service.emitter.emit("did-update-headers", { editor, headers });
 
       expect(layer.cache.get("data")).toEqual(headers);
       expect(layer.update).toHaveBeenCalled();
 
-      delete editor.scrollmap;
+      layer.disposables.dispose();
       disposable.dispose();
     });
 
