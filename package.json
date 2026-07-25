@@ -7,10 +7,12 @@
     "url": "https://github.com/lumine-code/scrollmap-navigation/issues"
   },
   "keywords": [
-    "scrollmap",
-    "navigation",
-    "headers",
-    "marker"
+    "overview-ruler",
+    "gutter",
+    "annotation",
+    "decoration",
+    "header",
+    "outline"
   ],
   "version": "1.0.0",
   "license": "MIT",
