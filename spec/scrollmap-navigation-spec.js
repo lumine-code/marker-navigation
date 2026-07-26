@@ -32,7 +32,7 @@ describe("scrollmap-navigation", () => {
       update: jasmine.createSpy("update"),
     };
     // Register through the provider contract, exactly like the scrollmap hub.
-    mainModule.provideScrollmap().initialize(layer);
+    mainModule.provideScrollmapLayer().initialize(layer);
     return layer;
   }
 
@@ -50,7 +50,7 @@ describe("scrollmap-navigation", () => {
     let provider;
 
     beforeEach(() => {
-      provider = mainModule.provideScrollmap();
+      provider = mainModule.provideScrollmapLayer();
     });
 
     it("describes the navigation layer", () => {
@@ -115,7 +115,7 @@ describe("scrollmap-navigation", () => {
     it("returns headers only for the buffer tracked by the navigation panel", () => {
       const headers = [{ revel: 1, startPoint: { row: 0, column: 0 } }];
       const service = createNaviService(editor, headers);
-      const disposable = mainModule.consumeNaviService(service);
+      const disposable = mainModule.consumeNavigationHeaders(service);
 
       expect(mainModule.getHeaders(editor)).toEqual(headers);
 
@@ -133,7 +133,7 @@ describe("scrollmap-navigation", () => {
     it("pushes fresh headers into the navigation layer on header updates", () => {
       const headers = [{ revel: 2, startPoint: { row: 4, column: 0 } }];
       const service = createNaviService(editor, headers);
-      const disposable = mainModule.consumeNaviService(service);
+      const disposable = mainModule.consumeNavigationHeaders(service);
 
       const layer = createLayer(editor);
 
@@ -148,7 +148,7 @@ describe("scrollmap-navigation", () => {
 
     it("detaches the service on disposal", () => {
       const service = createNaviService(editor, []);
-      const disposable = mainModule.consumeNaviService(service);
+      const disposable = mainModule.consumeNavigationHeaders(service);
       expect(mainModule.naviService).toBe(service);
 
       disposable.dispose();

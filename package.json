@@ -27,16 +27,16 @@
     "format:check": "prettier --check ."
   },
   "consumedServices": {
-    "navigation-panel": {
+    "navigation.headers": {
       "versions": {
-        "^1.0.0": "consumeNaviService"
+        "^1.0.0": "consumeNavigationHeaders"
       }
     }
   },
   "providedServices": {
-    "scrollmap": {
+    "scrollmap.layer": {
       "versions": {
-        "1.1.0": "provideScrollmap"
+        "1.0.0": "provideScrollmapLayer"
       }
     }
   },
