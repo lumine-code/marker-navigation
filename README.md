@@ -29,8 +29,8 @@ Markers follow the `--navigation-marker-*-color` properties defined by navigatio
 
 ## Services
 
-- **navigation.headers** (`^1.0.0`): consumed to read the flattened header outline of the active editor and follow its updates.
-- **scrollmap.layer** (`1.0.0`): provided to register the `navigation` marker layer rendered on the editor scrollbar.
+- **[navigation.headers](https://lumine-code.github.io/docs.html#services/navigation.headers)** (`^1.0.0`): consumed to read the flattened header outline of the active editor and follow its updates.
+- **[scrollmap.layer](https://lumine-code.github.io/docs.html#services/scrollmap.layer)** (`1.0.0`): provided to register the `navigation` marker layer rendered on the editor scrollbar.
 
 ## Contributing
 
