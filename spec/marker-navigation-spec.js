@@ -184,6 +184,25 @@ describe("marker-navigation", () => {
       disposable.dispose();
     });
 
+    it("keeps pushing to the surviving layer after one detaches", () => {
+      const provider = mainModule.provideMarkerLayer();
+      const first = createLayer(editor, provider);
+      const second = createLayer(editor, provider);
+      first.disposables.dispose();
+
+      const headers = [{ revel: 1, startPoint: { row: 7, column: 0 } }];
+      const service = createNaviService(editor, headers);
+      const disposable = mainModule.consumeNavigationHeaders(service);
+
+      service.emitter.emit("did-update-headers", { editor, headers });
+
+      expect(first.update).not.toHaveBeenCalled();
+      expect(second.cache.get("data")).toEqual(headers);
+      expect(second.update).toHaveBeenCalled();
+
+      disposable.dispose();
+    });
+
     it("forgets the editor once its last layer detaches", () => {
       const provider = mainModule.provideMarkerLayer();
       const first = createLayer(editor, provider);
