@@ -1,16 +1,18 @@
 {
-  "name": "scrollmap-navigation",
+  "name": "marker-navigation",
   "author": "lumine-code",
-  "description": "Show navigation headers on the scrollbar.",
-  "repository": "https://github.com/lumine-code/scrollmap-navigation",
+  "description": "Show navigation headers on the scrollbar and minimap.",
+  "repository": "https://github.com/lumine-code/marker-navigation",
   "bugs": {
-    "url": "https://github.com/lumine-code/scrollmap-navigation/issues"
+    "url": "https://github.com/lumine-code/marker-navigation/issues"
   },
   "keywords": [
     "overview-ruler",
     "gutter",
     "annotation",
     "decoration",
+    "scrollmap",
+    "minimap",
     "header",
     "outline"
   ],
@@ -21,7 +23,7 @@
   },
   "main": "./lib/main",
   "scripts": {
-    "test": "cd ../../lumine && npm run test:only -- ../pkg_lumine/scrollmap-navigation/spec",
+    "test": "cd ../../lumine && npm run test:only -- ../pkg_lumine/marker-navigation/spec",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -34,9 +36,9 @@
     }
   },
   "providedServices": {
-    "scrollmap.layer": {
+    "marker.layer": {
       "versions": {
-        "1.0.0": "provideScrollmapLayer"
+        "1.0.0": "provideMarkerLayer"
       }
     }
   },

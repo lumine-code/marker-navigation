@@ -1,15 +1,22 @@
 const { CompositeDisposable, Emitter } = require("atom");
 
-describe("scrollmap-navigation", () => {
-  let workspaceElement, editor, mainModule;
+describe("marker-navigation", () => {
+  let workspaceElement, editor, mainModule, attached;
 
   beforeEach(async () => {
     workspaceElement = atom.views.getView(atom.workspace);
     jasmine.attachToDOM(workspaceElement);
     editor = await atom.workspace.open();
     editor.setText(Array(30).fill("lorem ipsum").join("\n"));
-    const pack = await atom.packages.activatePackage("scrollmap-navigation");
+    const pack = await atom.packages.activatePackage("marker-navigation");
     mainModule = pack.mainModule;
+    attached = [];
+  });
+
+  afterEach(() => {
+    for (const layer of attached) {
+      layer.disposables.dispose();
+    }
   });
 
   function createNaviService(targetEditor, headers) {
@@ -24,53 +31,54 @@ describe("scrollmap-navigation", () => {
     };
   }
 
-  function createLayer(layerEditor) {
+  function createLayer(layerEditor, provider = mainModule.provideMarkerLayer()) {
     const layer = {
       editor: layerEditor,
+      props: provider,
       cache: new Map(),
+      items: [],
       disposables: new CompositeDisposable(),
       update: jasmine.createSpy("update"),
     };
-    // Register through the provider contract, exactly like the scrollmap hub.
-    mainModule.provideScrollmapLayer().initialize(layer);
+    // Attach through the provider contract, exactly like a marker host does.
+    provider.initialize(layer);
+    attached.push(layer);
     return layer;
   }
 
   describe("activation", () => {
     it("activates and observes its configuration", () => {
-      expect(atom.packages.isPackageActive("scrollmap-navigation")).toBe(true);
+      expect(atom.packages.isPackageActive("marker-navigation")).toBe(true);
       expect(mainModule.maxDepth).toBe(0);
 
-      atom.config.set("scrollmap-navigation.maxDepth", 3);
+      atom.config.set("marker-navigation.maxDepth", 3);
       expect(mainModule.maxDepth).toBe(3);
     });
   });
 
-  describe("scrollmap service provider", () => {
+  describe("marker layer provider", () => {
     let provider;
 
     beforeEach(() => {
-      provider = mainModule.provideScrollmapLayer();
+      provider = mainModule.provideMarkerLayer();
     });
 
     it("describes the navigation layer", () => {
       expect(provider.name).toBe("navigation");
-      expect(provider.threshold).toBe("scrollmap-navigation.threshold");
+      expect(provider.threshold).toBe("marker-navigation.threshold");
       expect(typeof provider.initialize).toBe("function");
       expect(typeof provider.getItems).toBe("function");
     });
 
     it("re-runs the layer when the max depth changes", () => {
-      const layer = createLayer(editor);
-      provider.initialize(layer);
+      const layer = createLayer(editor, provider);
 
-      atom.config.set("scrollmap-navigation.maxDepth", 4);
+      atom.config.set("marker-navigation.maxDepth", 4);
       expect(layer.update).toHaveBeenCalled();
-      layer.disposables.dispose();
     });
 
     it("maps cached headers to marker items with level classes", () => {
-      const layer = createLayer(editor);
+      const layer = createLayer(editor, provider);
       layer.cache.set("data", [
         { revel: 1, startPoint: { row: 2, column: 0 } },
         { revel: 3, startPoint: { row: 10, column: 0 } },
@@ -84,7 +92,7 @@ describe("scrollmap-navigation", () => {
     });
 
     it("skips headers without a start point", () => {
-      const layer = createLayer(editor);
+      const layer = createLayer(editor, provider);
       layer.cache.set("data", [{ revel: 1 }, { revel: 2, startPoint: { row: 5, column: 0 } }]);
 
       const items = provider.getItems(layer);
@@ -93,8 +101,8 @@ describe("scrollmap-navigation", () => {
     });
 
     it("filters headers deeper than maxDepth", () => {
-      atom.config.set("scrollmap-navigation.maxDepth", 2);
-      const layer = createLayer(editor);
+      atom.config.set("marker-navigation.maxDepth", 2);
+      const layer = createLayer(editor, provider);
       layer.cache.set("data", [
         { revel: 1, startPoint: { row: 1, column: 0 } },
         { revel: 2, startPoint: { row: 2, column: 0 } },
@@ -106,7 +114,7 @@ describe("scrollmap-navigation", () => {
     });
 
     it("returns no items without cached data", () => {
-      const layer = createLayer(editor);
+      const layer = createLayer(editor, provider);
       expect(provider.getItems(layer)).toEqual([]);
     });
   });
@@ -142,7 +150,6 @@ describe("scrollmap-navigation", () => {
       expect(layer.cache.get("data")).toEqual(headers);
       expect(layer.update).toHaveBeenCalled();
 
-      layer.disposables.dispose();
       disposable.dispose();
     });
 
@@ -154,6 +161,40 @@ describe("scrollmap-navigation", () => {
       disposable.dispose();
       expect(mainModule.naviService).toBe(null);
       expect(mainModule.getHeaders(editor)).toEqual([]);
+    });
+  });
+
+  describe("with one layer per renderer", () => {
+    it("pushes header updates to every layer of the same editor", () => {
+      const provider = mainModule.provideMarkerLayer();
+      const scrollmapLayer = createLayer(editor, provider);
+      const minimapLayer = createLayer(editor, provider);
+
+      const headers = [{ revel: 1, startPoint: { row: 7, column: 0 } }];
+      const service = createNaviService(editor, headers);
+      const disposable = mainModule.consumeNavigationHeaders(service);
+
+      service.emitter.emit("did-update-headers", { editor, headers });
+
+      expect(scrollmapLayer.cache.get("data")).toEqual(headers);
+      expect(scrollmapLayer.update).toHaveBeenCalled();
+      expect(minimapLayer.cache.get("data")).toEqual(headers);
+      expect(minimapLayer.update).toHaveBeenCalled();
+
+      disposable.dispose();
+    });
+
+    it("forgets the editor once its last layer detaches", () => {
+      const provider = mainModule.provideMarkerLayer();
+      const first = createLayer(editor, provider);
+      const second = createLayer(editor, provider);
+      expect(mainModule.layers.get(editor).size).toBe(2);
+
+      first.disposables.dispose();
+      expect(mainModule.layers.get(editor).size).toBe(1);
+
+      second.disposables.dispose();
+      expect(mainModule.layers.has(editor)).toBe(false);
     });
   });
 });
