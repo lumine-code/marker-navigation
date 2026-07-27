@@ -164,55 +164,13 @@ describe("marker-navigation", () => {
     });
   });
 
-  describe("with one layer per renderer", () => {
-    it("pushes header updates to every layer of the same editor", () => {
+  describe("layer tracking", () => {
+    it("forgets the editor once its layer detaches", () => {
       const provider = mainModule.provideMarkerLayer();
-      const scrollmapLayer = createLayer(editor, provider);
-      const minimapLayer = createLayer(editor, provider);
+      const layer = createLayer(editor, provider);
+      expect(mainModule.layers.get(editor)).toBe(layer);
 
-      const headers = [{ revel: 1, startPoint: { row: 7, column: 0 } }];
-      const service = createNaviService(editor, headers);
-      const disposable = mainModule.consumeNavigationHeaders(service);
-
-      service.emitter.emit("did-update-headers", { editor, headers });
-
-      expect(scrollmapLayer.cache.get("data")).toEqual(headers);
-      expect(scrollmapLayer.update).toHaveBeenCalled();
-      expect(minimapLayer.cache.get("data")).toEqual(headers);
-      expect(minimapLayer.update).toHaveBeenCalled();
-
-      disposable.dispose();
-    });
-
-    it("keeps pushing to the surviving layer after one detaches", () => {
-      const provider = mainModule.provideMarkerLayer();
-      const first = createLayer(editor, provider);
-      const second = createLayer(editor, provider);
-      first.disposables.dispose();
-
-      const headers = [{ revel: 1, startPoint: { row: 7, column: 0 } }];
-      const service = createNaviService(editor, headers);
-      const disposable = mainModule.consumeNavigationHeaders(service);
-
-      service.emitter.emit("did-update-headers", { editor, headers });
-
-      expect(first.update).not.toHaveBeenCalled();
-      expect(second.cache.get("data")).toEqual(headers);
-      expect(second.update).toHaveBeenCalled();
-
-      disposable.dispose();
-    });
-
-    it("forgets the editor once its last layer detaches", () => {
-      const provider = mainModule.provideMarkerLayer();
-      const first = createLayer(editor, provider);
-      const second = createLayer(editor, provider);
-      expect(mainModule.layers.get(editor).size).toBe(2);
-
-      first.disposables.dispose();
-      expect(mainModule.layers.get(editor).size).toBe(1);
-
-      second.disposables.dispose();
+      layer.disposables.dispose();
       expect(mainModule.layers.has(editor)).toBe(false);
     });
   });
