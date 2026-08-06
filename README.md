@@ -17,9 +17,9 @@ To install `marker-navigation` search for _marker-navigation_ in the Install pan
 
 ## Customization
 
-Markers follow the `--navigation-marker-*-color` properties defined by navigation-panel, so overriding those recolors the editor lines and the markers together. The style can also be adjusted in the `styles.less` file, e.g. recolor the markers of a given header level:
+Markers follow the `--navigation-marker-*-color` properties defined by navigation-panel, so overriding those recolors the editor lines and the markers together. The style can also be adjusted in the `styles.css` file, e.g. recolor the markers of a given header level:
 
-```less
+```css
 .marker.marker-navigation.navigation-marker-1 {
   background: var(--text-color-info);
 }
