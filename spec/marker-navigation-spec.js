@@ -1,14 +1,14 @@
-const { CompositeDisposable, Emitter } = require("atom");
+const { CompositeDisposable, Emitter } = require("lumine");
 
 describe("marker-navigation", () => {
   let workspaceElement, editor, mainModule, attached;
 
   beforeEach(async () => {
-    workspaceElement = atom.views.getView(atom.workspace);
+    workspaceElement = lumine.views.getView(lumine.workspace);
     jasmine.attachToDOM(workspaceElement);
-    editor = await atom.workspace.open();
+    editor = await lumine.workspace.open();
     editor.setText(Array(30).fill("lorem ipsum").join("\n"));
-    const pack = await atom.packages.activatePackage("marker-navigation");
+    const pack = await lumine.packages.activatePackage("marker-navigation");
     mainModule = pack.mainModule;
     attached = [];
   });
@@ -48,10 +48,10 @@ describe("marker-navigation", () => {
 
   describe("activation", () => {
     it("activates and observes its configuration", () => {
-      expect(atom.packages.isPackageActive("marker-navigation")).toBe(true);
+      expect(lumine.packages.isPackageActive("marker-navigation")).toBe(true);
       expect(mainModule.maxDepth).toBe(0);
 
-      atom.config.set("marker-navigation.maxDepth", 3);
+      lumine.config.set("marker-navigation.maxDepth", 3);
       expect(mainModule.maxDepth).toBe(3);
     });
   });
@@ -73,7 +73,7 @@ describe("marker-navigation", () => {
     it("re-runs the layer when the max depth changes", () => {
       const layer = createLayer(editor, provider);
 
-      atom.config.set("marker-navigation.maxDepth", 4);
+      lumine.config.set("marker-navigation.maxDepth", 4);
       expect(layer.update).toHaveBeenCalled();
     });
 
@@ -101,7 +101,7 @@ describe("marker-navigation", () => {
     });
 
     it("filters headers deeper than maxDepth", () => {
-      atom.config.set("marker-navigation.maxDepth", 2);
+      lumine.config.set("marker-navigation.maxDepth", 2);
       const layer = createLayer(editor, provider);
       layer.cache.set("data", [
         { revel: 1, startPoint: { row: 1, column: 0 } },
@@ -127,7 +127,7 @@ describe("marker-navigation", () => {
 
       expect(mainModule.getHeaders(editor)).toEqual(headers);
 
-      const otherEditor = atom.workspace.buildTextEditor();
+      const otherEditor = lumine.workspace.buildTextEditor();
       expect(mainModule.getHeaders(otherEditor)).toEqual([]);
 
       disposable.dispose();
