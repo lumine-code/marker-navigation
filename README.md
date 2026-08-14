@@ -13,7 +13,7 @@ A layer package for [scrollmap](https://github.com/lumine-code/scrollmap) and [m
 
 ## Installation
 
-To install `marker-navigation` search for _marker-navigation_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/marker-navigation`.
+To install `marker-navigation` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/marker-navigation`.
 
 ## Customization
 
@@ -27,8 +27,8 @@ Markers follow the `--navigation-marker-*-color` properties defined by navigatio
 
 ## Services
 
-- **navigation.headers** (`^1.0.0`): consumed to read the flattened header outline of the active editor and follow its updates.
-- **marker.layer** (`1.0.0`): provided to register the `navigation` marker layer that each map draws.
+- `navigation.headers`: consumed to read the flattened header outline of the active editor and follow its updates.
+- `marker.layer`: provided to register the `navigation` marker layer that each map draws.
 
 ## Contributing
 
